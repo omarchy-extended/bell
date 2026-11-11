@@ -21,6 +21,19 @@ Item {
   readonly property real k: sizeScale > 0 ? sizeScale : history.dims ? history.dims.scale : 1
   function px(n) { return Math.round(n * k) }
   signal acted()                           // a click did something: close the panel
+  // For a host with the keyboard (Start's menu): the one chosen (an index into
+  // what's shown; -1: none), and what Enter and Delete do to it.
+  property int chosen: -1
+  readonly property int count: shown.length
+  function activateChosen() {
+    var it = chosen >= 0 ? shown[chosen] : null
+    if (it && history.activate(it.e)) acted()
+  }
+  function hideChosen() {
+    var it = chosen >= 0 ? shown[chosen] : null
+    if (it) history.hide(it.e.key)
+  }
+  onChosenChanged: if (chosen >= 0) view.positionViewAtIndex(chosen, ListView.Contain)
 
   readonly property var shown: {
     var q = query.trim().toLowerCase()
@@ -63,6 +76,8 @@ Item {
     delegate: Item {
       id: cell
       required property var modelData
+      required property int index
+      readonly property bool chosen: index === list.chosen
       readonly property var e: modelData.e
       readonly property bool urgent: Number(e.urgency || 0) >= 2
       readonly property bool secret: list.history.redacted(e)
@@ -99,7 +114,7 @@ Item {
           GradientStop { position: 0; color: Commons.Util.alpha(list.text, hit.containsMouse ? 0.11 : 0.075) }
           GradientStop { position: 1; color: Commons.Util.alpha(list.text, hit.containsMouse ? 0.07 : 0.035) }
         }
-        border.color: Commons.Util.alpha(cell.urgent ? Commons.Color.urgent : list.text, cell.urgent ? 0.45 : 0.08)
+        border.color: cell.chosen ? list.accent : Commons.Util.alpha(cell.urgent ? Commons.Color.urgent : list.text, cell.urgent ? 0.45 : 0.08)
 
         // The accent stripe.
         Rectangle {
