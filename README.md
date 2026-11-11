@@ -21,6 +21,8 @@ put away or clear. Omarchy's own pop-ups stay as they are.
   app's window. The notification's own buttons (Reply, Open, ...) are on the
   card too.
 - **Search** covers the app, the summary and the text.
+- **Keys.** Up and Down choose a notification, Enter does what a click on it
+  does, Delete takes it off the list, Esc closes.
 - **✕** (on hover) puts one away, **Clear** all of them. Only here: Omarchy's
   history file is never written to, so its own history view still has them.
 - **Do Not Disturb**, the same switch as Omarchy's.

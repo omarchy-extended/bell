@@ -212,11 +212,25 @@ Panel {
           font.pixelSize: root.px(Style.font.bodySmall)
           clip: true
           Keys.onEscapePressed: { if (root.settingsOpen) root.settingsOpen = false; else if (text) text = ""; else root.close() }
+          // Up and Down choose a notification, Enter does what a click on it
+          // does, Delete takes it off the list. Typing searches again.
+          onTextChanged: notes.chosen = -1
+          Keys.onDownPressed: if (!root.settingsOpen && notes.count) notes.chosen = Math.min(notes.count - 1, notes.chosen + 1)
+          Keys.onUpPressed: if (!root.settingsOpen && notes.count) notes.chosen = Math.max(0, notes.chosen < 0 ? notes.count - 1 : notes.chosen - 1)
+          Keys.onReturnPressed: notes.activateChosen()
+          Keys.onEnterPressed: notes.activateChosen()
+          Keys.onDeletePressed: function(event) {
+            if (notes.chosen < 0) { event.accepted = false; return }
+            var at = notes.chosen
+            notes.hideChosen()
+            Qt.callLater(function() { notes.chosen = Math.min(at, notes.count - 1) })
+          }
           Text { visible: !search.text; anchors.verticalCenter: parent.verticalCenter; text: "Search notifications"; color: root.dim; font: search.font }
         }
       }
 
       NotificationList {
+        id: notes
         visible: !root.settingsOpen
         anchors { top: searchBox.bottom; topMargin: 8; left: parent.left; right: parent.right; bottom: parent.bottom }
         history: history
