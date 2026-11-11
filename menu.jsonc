@@ -1,0 +1,6 @@
+{
+  // The omarchy-extended group, in Setup (every omext addon has it; any one keeps it).
+  "setup.omext": {"icon": "", "label": "Omarchy Extended", "description": "The omarchy-extended addons, on or off", "aliases": ["omext", "extended"]},
+  // The bell on the bar, on or off.
+  "setup.omext.bell": {"icon": "󰂚", "label": "Bell", "description": "The notification history on the bar", "action": "if omarchy plugin list --json | jq -e '.[] | select(.id == \"omext.bell\") | .enabled' >/dev/null; then omarchy plugin disable omext.bell >/dev/null && notify-send Bell \"Turned off\"; else omarchy plugin enable omext.bell >/dev/null && notify-send Bell \"Turned on\"; fi", "checked": "omarchy plugin list --json | jq -e '.[] | select(.id == \"omext.bell\") | .enabled' >/dev/null"}
+}
