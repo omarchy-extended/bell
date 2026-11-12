@@ -66,6 +66,14 @@ Item {
     onFileChanged: reload()
     onLoaded: { try { var v = JSON.parse(text()); if (v && typeof v === "object") history.state = v } catch (e) {} }
   }
+  // The file is there from the start: one that isn't can't be watched, and the
+  // bell's panel and Start's list each have a History of their own, which would
+  // then not hear of what the other took off the list (and write over it).
+  Process {
+    running: true
+    command: ["bash", "-c", 'mkdir -p "$(dirname "$0")" && { [ -s "$0" ] || printf "%s\\n" \'{"seen":0,"cleared":0,"hidden":[]}\' > "$0"; }', history.statePath]
+    onExited: { stateFile.path = ""; stateFile.path = history.statePath }
+  }
   function save(patch) {
     var s = Object.assign({ seen: 0, cleared: 0, hidden: [] }, state, patch)
     state = s
