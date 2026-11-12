@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "omext.bell",
   "name": "Bell",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "omarchy-extended",
   "license": "MIT",
   "description": "The notification history on the bar (omext bell): a bell with what's new, and every notification by day, to search, act on and clear.",
